@@ -56,7 +56,13 @@ class Bar():
         self.last_update = time.clock()
 
     def save(self, log_path, log_t_path):
-        press_log = defaultdict(int, json.load(open(log_path)))
+        try:
+            with open(log_path) as f:
+                press_log = defaultdict(int, json.load(f))
+        except IOError:
+            #file doesn't exist
+            press_log = defaultdict(int)
+        
         out_log = {}
         for k in press_log.keys() + self.press_log.keys():
             out_log[int(k)] = press_log[unicode(k)] + self.press_log[int(k)]
